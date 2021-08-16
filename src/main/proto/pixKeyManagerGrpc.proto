@@ -8,13 +8,29 @@ option objc_class_prefix = "HLW";
 package br.com.edumatt3;
 
 service PixKeyManagerGrpcService {
-  rpc send (PixKeyManagerGrpcRequest) returns (PixKeyManagerGrpcReply) {}
+  rpc register (PixKeyRequest) returns (PixKeyResponse) {}
 }
 
-message PixKeyManagerGrpcRequest {
-  string name = 1;
+message PixKeyRequest {
+  string clientId = 1;
+  KeyType keyType = 2;
+  string key = 3;
+  AccountType accountType = 4;
 }
 
-message PixKeyManagerGrpcReply {
+enum KeyType {
+  UNKNOWN  = 0;
+  CPF = 1;
+  PHONENUMBER = 2;
+  EMAIL = 3;
+}
+
+enum AccountType {
+  UNSPECIFIED = 0;
+  CORRENTE = 1;
+  POUPANCA = 2;
+}
+
+message PixKeyResponse {
   string message = 1;
 }
