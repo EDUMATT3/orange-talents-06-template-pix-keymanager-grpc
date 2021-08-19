@@ -5,7 +5,7 @@ option java_package = "br.com.edumatt3";
 option java_outer_classname = "PixKeyManagerGrpc";
 option objc_class_prefix = "HLW";
 
-package br.com.edumatt3;
+package br.com.edumatt3.grpc;
 
 service PixKeyManagerGrpcService {
   rpc register (PixKeyRequest) returns (PixKeyResponse) {}
@@ -13,24 +13,25 @@ service PixKeyManagerGrpcService {
 
 message PixKeyRequest {
   string clientId = 1;
-  KeyType keyType = 2;
+  KeyTypeMessage keyType = 2;
   string key = 3;
-  AccountType accountType = 4;
+  AccountTypeMessage accountType = 4;
 }
 
-enum KeyType {
+enum KeyTypeMessage {
   UNKNOWN  = 0;
   CPF = 1;
   PHONENUMBER = 2;
   EMAIL = 3;
+  RANDOM = 4;
 }
 
-enum AccountType {
+enum AccountTypeMessage {
   UNSPECIFIED = 0;
-  CORRENTE = 1;
-  POUPANCA = 2;
+  CONTA_CORRENTE = 1;
+  CONTA_POUPANCA = 2;
 }
 
 message PixKeyResponse {
-  string message = 1;
+  string pixId = 1;
 }
