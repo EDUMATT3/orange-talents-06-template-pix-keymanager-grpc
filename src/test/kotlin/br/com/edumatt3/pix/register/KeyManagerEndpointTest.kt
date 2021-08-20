@@ -23,6 +23,7 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.any
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -94,7 +95,8 @@ internal class KeyManagerEndpointTest(
     @Test
     internal fun `should not register when client isnt found on itau erp system`() {
 
-        `when`(itauErpClient.findAccount(CLIENT_ID, CONTA_CORRENTE))
+
+        `when`(itauErpClient.findAccount(any(), CONTA_CORRENTE))
             .thenReturn(HttpResponse.notFound())
 
         val exception = assertThrows<StatusRuntimeException> {

@@ -5,10 +5,16 @@ option java_package = "br.com.edumatt3";
 option java_outer_classname = "PixKeyManagerGrpc";
 option objc_class_prefix = "HLW";
 
+import "google/protobuf/empty.proto";
+
 package br.com.edumatt3.grpc;
 
 service PixKeyManagerGrpcService {
   rpc register (PixKeyRequest) returns (PixKeyResponse) {}
+}
+
+service PixKeyDeleteService {
+  rpc delete(DeletePixKeyRequest) returns (google.protobuf.Empty) {}
 }
 
 message PixKeyRequest {
@@ -34,4 +40,9 @@ enum AccountTypeMessage {
 
 message PixKeyResponse {
   string pixId = 1;
+}
+
+message DeletePixKeyRequest {
+  string pixId = 1;
+  string clientId = 2;
 }

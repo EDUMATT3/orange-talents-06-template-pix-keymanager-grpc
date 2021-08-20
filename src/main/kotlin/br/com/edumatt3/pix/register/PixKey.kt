@@ -21,11 +21,9 @@ class PixKey(
     @field:Embedded
     val account: CustomerAccount
 ) {
+    fun belongsToClient(clientId: String): Boolean = this.clientId == clientId
 
     @Id
     @GeneratedValue
-    var id: Long? = null
-
-    @NotNull
-    val pixId: String = UUID.randomUUID().toString()
+    var id: UUID? = null
 }

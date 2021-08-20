@@ -24,6 +24,6 @@ class NewPixKeyService(private val itauErpClient: ItauErpClient,@Inject val pixK
 
         pixKeyRepository.save(pixKey)
 
-        return pixKey.pixId
+        return pixKey.id.toString()
     }
 }
