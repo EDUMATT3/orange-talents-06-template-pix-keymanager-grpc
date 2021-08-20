@@ -34,7 +34,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     implementation("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly("com.h2database:h2")
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
@@ -44,6 +43,11 @@ dependencies {
 
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter:3.8.0")
+
+    testImplementation("com.h2database:h2")
+    testImplementation("org.hamcrest:hamcrest-core:2.2")
+    //for get cpf validation
+    implementation("org.hibernate:hibernate-validator:7.0.1.Final")
    // testImplementation("io.micronaut:micronaut-http-client")
 
 }

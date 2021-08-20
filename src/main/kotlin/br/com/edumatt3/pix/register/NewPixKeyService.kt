@@ -1,5 +1,6 @@
 package br.com.edumatt3.pix.register
 
+import br.com.edumatt3.common.exceptions.PixKeyAlreadyExistsException
 import br.com.edumatt3.pix.integration.ItauErpClient
 import com.google.rpc.BadRequest
 import io.micronaut.http.HttpStatus
@@ -13,10 +14,12 @@ import javax.validation.Valid
 class NewPixKeyService(private val itauErpClient: ItauErpClient,@Inject val pixKeyRepository: PixKeyRepository) {
     fun register(@Valid newPixKey: NewPixKey): String {
 
+        //pode ser cadastrada duas chaves aleatórias?
+
+        if (pixKeyRepository.existsByKey(newPixKey.key!!)) throw PixKeyAlreadyExistsException()
+
         val response = itauErpClient.findAccount(newPixKey.clientId, newPixKey.accountType!!)
-
-        val account = response.body()?.toModel() ?: throw IllegalStateException("Client not found on itau")
-
+        val account = response.body()?.toModel() ?: throw IllegalStateException("Client not found on itau erp")
         val pixKey = newPixKey.toModel(account)
 
         pixKeyRepository.save(pixKey)

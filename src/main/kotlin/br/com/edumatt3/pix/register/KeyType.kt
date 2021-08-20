@@ -1,13 +1,20 @@
 package br.com.edumatt3.pix.register
 
 import io.micronaut.validation.validator.constraints.EmailValidator
+import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator
 
 enum class KeyType {
 
     CPF {
         override fun validate(key: String?): Boolean {
-            return if (key.isNullOrBlank()) false
-            else key.matches("\\d{11}".toRegex())
+            return when {
+                key.isNullOrBlank() -> false
+                !key.matches("\\d{11}".toRegex()) -> false
+                else -> CPFValidator().run {
+                    initialize(null)
+                    isValid(key, null)
+                }
+            }
         }
     },
     PHONENUMBER {
@@ -17,14 +24,10 @@ enum class KeyType {
         }
     },
     EMAIL {
-        override fun validate(key: String?): Boolean {
-            if (key.isNullOrBlank()) return false
-
-            return EmailValidator().run {
-                initialize(null)
-                isValid(key, null)
-            }
-        }
+        override fun validate(key: String?): Boolean = if (key.isNullOrBlank()) false else EmailValidator().run {
+                    initialize(null)
+                    isValid(key, null)
+                }
     },
     RANDOM {
         override fun validate(key: String?): Boolean = key.isNullOrBlank()

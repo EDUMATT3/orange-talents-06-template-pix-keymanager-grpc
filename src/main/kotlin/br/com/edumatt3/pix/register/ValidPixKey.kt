@@ -25,5 +25,5 @@ class ValidPixKeyValidator : ConstraintValidator<ValidPixKey, NewPixKey> {
         value: NewPixKey?,
         annotationMetadata: AnnotationValue<ValidPixKey>,
         context: ConstraintValidatorContext
-    ): Boolean = if (value?.keyType == null) false else value.keyType.validate(value.key)
+    ): Boolean = if (value?.keyType == null) true else value.keyType.validate(value.key)
 }

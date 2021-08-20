@@ -1,5 +1,6 @@
 package br.com.edumatt3.pix.register
 
+import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
