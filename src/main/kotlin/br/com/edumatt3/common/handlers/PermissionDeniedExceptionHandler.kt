@@ -5,7 +5,9 @@ import br.com.edumatt3.common.ExceptionHandler.StatusWithDetails
 import br.com.edumatt3.common.exceptions.PermissionDeniedException
 import com.google.rpc.Code
 import com.google.rpc.Status
+import javax.inject.Singleton
 
+@Singleton
 class PermissionDeniedExceptionHandler: ExceptionHandler<PermissionDeniedException> {
     override fun handle(e: PermissionDeniedException): StatusWithDetails {
 
