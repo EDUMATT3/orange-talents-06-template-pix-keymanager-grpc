@@ -1,6 +1,7 @@
 package br.com.edumatt3.utils
 
 import br.com.edumatt3.pix.integration.bcb.CreatePixKeyRequest
+import br.com.edumatt3.pix.integration.bcb.DeletePixKeyBcbRequest
 import br.com.edumatt3.pix.integration.itauerp.Bearer
 import br.com.edumatt3.pix.integration.itauerp.CustomerAccountResponse
 import br.com.edumatt3.pix.integration.itauerp.Institution
@@ -35,5 +36,3 @@ fun createPixKey(clientId: String, cpf: String, accountType: AccountType): PixKe
         account = customerAccount
     )
 }
-
-fun createPixRequest(pixKey: PixKey): CreatePixKeyRequest = CreatePixKeyRequest.from(pixKey)

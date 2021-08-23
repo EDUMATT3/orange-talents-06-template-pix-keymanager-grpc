@@ -2,6 +2,8 @@ package br.com.edumatt3.pix.delete
 
 import br.com.edumatt3.DeletePixKeyRequest
 import br.com.edumatt3.PixKeyDeleteServiceGrpc
+import br.com.edumatt3.pix.integration.bcb.CentralBankClient
+import br.com.edumatt3.pix.integration.bcb.DeletePixKeyBcbRequest
 import br.com.edumatt3.pix.register.AccountType
 import br.com.edumatt3.pix.register.PixKeyRepository
 import br.com.edumatt3.utils.createPixKey
@@ -11,6 +13,8 @@ import io.grpc.StatusRuntimeException
 import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
 import io.micronaut.grpc.server.GrpcServerChannel
+import io.micronaut.http.HttpResponse
+import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -18,6 +22,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,6 +33,9 @@ internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository
 
     @Inject
     private lateinit var client: PixKeyDeleteServiceGrpc.PixKeyDeleteServiceBlockingStub
+
+    @Inject
+    private lateinit var centralBankClient: CentralBankClient
 
     @BeforeEach
     internal fun setUp() {
@@ -38,6 +47,9 @@ internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository
         val clientId = UUID.randomUUID().toString()
         val pixKey =
             repository.save(createPixKey(clientId, "50508675847", AccountType.CONTA_CORRENTE))
+
+        `when`(centralBankClient.deletePixKey(pixKey.key, DeletePixKeyBcbRequest(pixKey.key)))
+            .thenReturn(HttpResponse.ok())
 
         val request = DeletePixKeyRequest.newBuilder().setPixId(pixKey.id.toString()).setClientId(clientId).build()
 
@@ -94,11 +106,46 @@ internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository
         assertTrue(repository.count() == 1L)
     }
 
+    @Test
+    internal fun `should not delete when it was not possible remove on bcb system`() {
+        val clientId = UUID.randomUUID().toString()
+        val pixKey = repository.save(
+            createPixKey(
+                clientId,
+                "50508675847",
+                AccountType.CONTA_CORRENTE
+            )
+        )
+
+        `when`(centralBankClient.deletePixKey(pixKey.key, DeletePixKeyBcbRequest(pixKey.key)))
+            .thenReturn(HttpResponse.notFound())
+
+        val request = DeletePixKeyRequest.newBuilder()
+            .setPixId(pixKey.id.toString())
+            .setClientId(clientId)
+            .build()
+
+        val thrown = assertThrows<StatusRuntimeException> {
+            client.delete(request)
+        }
+
+        with(thrown){
+            assertEquals(Status.FAILED_PRECONDITION.code, status.code)
+            assertEquals("it was not possible to delete the key in the central bank system (BCB)", status.description)
+        }
+
+        assertTrue(repository.count() > 0)
+    }
+
     @Factory
     class Clients  {
         @Singleton
         fun blockingStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): PixKeyDeleteServiceGrpc.PixKeyDeleteServiceBlockingStub? {
             return PixKeyDeleteServiceGrpc.newBlockingStub(channel)
         }
+    }
+    @MockBean(CentralBankClient::class)
+    fun centralBankinClient(): CentralBankClient? {
+        return Mockito.mock(CentralBankClient::class.java)
     }
 }
