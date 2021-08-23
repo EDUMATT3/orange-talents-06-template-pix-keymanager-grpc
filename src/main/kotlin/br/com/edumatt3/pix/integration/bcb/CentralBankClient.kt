@@ -2,9 +2,7 @@ package br.com.edumatt3.pix.integration.bcb
 
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Produces
+import io.micronaut.http.annotation.*
 import io.micronaut.http.client.annotation.Client
 
 @Client("\${bcb.url}")
@@ -16,4 +14,11 @@ interface CentralBankClient {
         consumes = [MediaType.APPLICATION_XML]
     )
     fun createPixKey(@Body request: CreatePixKeyRequest): HttpResponse<CreatePixKeyResponse>
+
+    @Delete(
+        value = "/pix/keys/{key}",
+        produces = [MediaType.APPLICATION_XML],
+        consumes = [MediaType.APPLICATION_XML]
+    )
+    fun deletePixKey(@PathVariable key: String, @Body request: DeletePixKeyBcbRequest): HttpResponse<DeletePixKeyBcbResponse>
 }
