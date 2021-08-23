@@ -5,6 +5,9 @@ import br.com.edumatt3.KeyTypeMessage
 import br.com.edumatt3.PixKeyManagerGrpcServiceGrpc
 import br.com.edumatt3.PixKeyRequest
 import br.com.edumatt3.common.exceptions.PixKeyAlreadyExistsException
+import br.com.edumatt3.pix.integration.bcb.CentralBankClient
+import br.com.edumatt3.pix.integration.bcb.CreatePixKeyRequest
+import br.com.edumatt3.pix.integration.bcb.CreatePixKeyResponse
 import br.com.edumatt3.pix.integration.itauerp.ItauErpClient
 import br.com.edumatt3.pix.register.AccountType.CONTA_CORRENTE
 import br.com.edumatt3.utils.createItauCustomerAccountReponse
@@ -28,6 +31,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,6 +44,9 @@ internal class KeyManagerEndpointTest(
 
     @Inject
     lateinit var itauErpClient: ItauErpClient
+
+    @Inject
+    lateinit var centralBankClient: CentralBankClient
 
     @BeforeEach
     internal fun setUp() {
@@ -56,6 +63,11 @@ internal class KeyManagerEndpointTest(
         `when`(itauErpClient.findAccount(CLIENT_ID, accountType))
             .thenReturn(HttpResponse.ok(createItauCustomerAccountReponse(CLIENT_ID, validCpf, accountType)))
 
+        val pixKeyBcbRequest = CreatePixKeyRequest.from(createPixKey(CLIENT_ID, validCpf, accountType))
+
+        `when`(centralBankClient.createPixKey(pixKeyBcbRequest))
+            .thenReturn(HttpResponse.created(CreatePixKeyResponse(key = validCpf, createdAt = LocalDateTime.now())))
+
 
         val pixKeyRequest = PixKeyRequest.newBuilder().setClientId(CLIENT_ID)
             .setKeyType(KeyTypeMessage.CPF)
@@ -70,7 +82,7 @@ internal class KeyManagerEndpointTest(
     @Test
     internal fun `should not register when key already exists`() {
 
-        pixKeyRepository.save(createPixKey(CLIENT_ID, validCpf, accountType ))
+        pixKeyRepository.save(createPixKey(CLIENT_ID, validCpf, accountType))
 
         val exception = assertThrows<StatusRuntimeException> {
             val pixKeyRequest = PixKeyRequest.newBuilder().setClientId(CLIENT_ID)
@@ -82,7 +94,7 @@ internal class KeyManagerEndpointTest(
             keyManagerClient.register(pixKeyRequest)
         }
 
-        with(exception){
+        with(exception) {
             assertEquals(Status.ALREADY_EXISTS.code, status.code)
             assertEquals(PixKeyAlreadyExistsException().message, status.description)
         }
@@ -105,7 +117,7 @@ internal class KeyManagerEndpointTest(
             keyManagerClient.register(pixKeyRequest)
         }
 
-        with(exception){
+        with(exception) {
             assertEquals(Status.FAILED_PRECONDITION.code, status.code)
             assertEquals("Client not found on itau erp", status.description)
         }
@@ -118,13 +130,15 @@ internal class KeyManagerEndpointTest(
             keyManagerClient.register(PixKeyRequest.newBuilder().build())
         }
 
-        with(thrown){
+        with(thrown) {
             assertEquals(Status.INVALID_ARGUMENT.code, status.code)
-            assertThat(violations(), containsInAnyOrder(
-                Pair("clientId", "must not be blank"),
-                Pair("accountType", "must not be null"),
-                Pair("keyType", "must not be null"),
-            ))
+            assertThat(
+                violations(), containsInAnyOrder(
+                    Pair("clientId", "must not be blank"),
+                    Pair("accountType", "must not be null"),
+                    Pair("keyType", "must not be null"),
+                )
+            )
         }
     }
 
@@ -146,13 +160,44 @@ internal class KeyManagerEndpointTest(
 
     }
 
+    @Test
+    internal fun `should not register a key when cant register on central bank`() {
+        `when`(itauErpClient.findAccount(CLIENT_ID, accountType))
+            .thenReturn(HttpResponse.ok(createItauCustomerAccountReponse(CLIENT_ID, validCpf, accountType)))
+
+        val pixKeyBcbRequest = CreatePixKeyRequest.from(createPixKey(CLIENT_ID, validCpf, accountType))
+
+        `when`(centralBankClient.createPixKey(pixKeyBcbRequest))
+            .thenReturn(HttpResponse.notFound())
+
+        val exception = assertThrows<StatusRuntimeException> {
+            val pixKeyRequest = PixKeyRequest.newBuilder().setClientId(CLIENT_ID)
+                .setKeyType(KeyTypeMessage.CPF)
+                .setKey(validCpf)
+                .setAccountType(AccountTypeMessage.CONTA_CORRENTE)
+                .build()
+
+            keyManagerClient.register(pixKeyRequest)
+        }
+
+        with(exception) {
+            assertEquals(Status.FAILED_PRECONDITION.code, status.code)
+            assertEquals("Error trying to create pix key in central bank (BCB)", status.description)
+        }
+    }
+
     @MockBean(ItauErpClient::class)
-    fun mathService(): ItauErpClient? {
+    fun itauErpClient(): ItauErpClient? {
         return mock(ItauErpClient::class.java)
     }
 
+    @MockBean(CentralBankClient::class)
+    fun centralBankinClient(): CentralBankClient? {
+        return mock(CentralBankClient::class.java)
+    }
+
     @Factory
-    class Clients  {
+    class Clients {
         @Singleton
         fun blockingStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): PixKeyManagerGrpcServiceGrpc.PixKeyManagerGrpcServiceBlockingStub? {
             return PixKeyManagerGrpcServiceGrpc.newBlockingStub(channel)

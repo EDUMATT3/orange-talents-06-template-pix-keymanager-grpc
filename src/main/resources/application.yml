@@ -1,6 +1,8 @@
 micronaut:
   application:
     name: pixKeyManagerGrpc
+  metrics:
+    enabled: true
 
 datasources:
   default:
@@ -22,3 +24,15 @@ jpa.default.properties.hibernate.format-sql: true
 
 itau.erp.url: ${ITAU_URL:`http://localhost:9091/api/v1`}
 bcb.url: ${BCB_URL:`http://localhost:8082/api/v1`}
+
+endpoints:
+  all:
+    sensitive: false
+  health:
+    enabled: true
+    details-visible: ANONYMOUS
+  metrics:
+    enabled: true
+
+
+grpc.server.health.enabled: true

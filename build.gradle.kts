@@ -18,6 +18,7 @@ repositories {
 }
 
 micronaut {
+    runtime("netty")
     testRuntime("junit5")
     processing {
         incremental(true)
@@ -50,6 +51,14 @@ dependencies {
     implementation("org.hibernate:hibernate-validator:7.0.1.Final")
     //for consumes xml
     implementation("io.micronaut.xml:micronaut-jackson-xml")
+
+    //metrics
+    implementation("io.micronaut:micronaut-management")
+    compile ("io.micronaut.micrometer:micronaut-micrometer-core")
+    // micrometer-registry-statsd also pulls in micrometer-core so included above to verbose example
+    compile("io.micronaut.micrometer:micronaut-micrometer-registry-statsd")
+    // Also required to enable endpoint
+    compile("io.micronaut:micronaut-management")
    // testImplementation("io.micronaut:micronaut-http-client")
 
 }

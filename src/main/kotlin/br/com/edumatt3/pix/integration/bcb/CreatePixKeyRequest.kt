@@ -33,7 +33,7 @@ data class CreatePixKeyRequest(
     }
 }
 
-class BankAccountRequest(
+data class BankAccountRequest(
     val participant: String,
     val branch: String,
     val accountNumber: String,
