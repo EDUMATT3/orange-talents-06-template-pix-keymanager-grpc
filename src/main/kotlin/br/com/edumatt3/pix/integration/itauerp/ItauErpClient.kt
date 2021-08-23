@@ -1,4 +1,4 @@
-package br.com.edumatt3.pix.integration
+package br.com.edumatt3.pix.integration.itauerp
 
 import br.com.edumatt3.pix.register.AccountType
 import io.micronaut.http.HttpResponse

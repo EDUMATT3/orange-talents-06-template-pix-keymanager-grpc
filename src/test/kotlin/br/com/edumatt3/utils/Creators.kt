@@ -1,8 +1,8 @@
 package br.com.edumatt3.utils
 
-import br.com.edumatt3.pix.integration.Bearer
-import br.com.edumatt3.pix.integration.CustomerAccountResponse
-import br.com.edumatt3.pix.integration.Institution
+import br.com.edumatt3.pix.integration.itauerp.Bearer
+import br.com.edumatt3.pix.integration.itauerp.CustomerAccountResponse
+import br.com.edumatt3.pix.integration.itauerp.Institution
 import br.com.edumatt3.pix.register.AccountType
 import br.com.edumatt3.pix.register.KeyType
 import br.com.edumatt3.pix.register.PixKey

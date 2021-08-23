@@ -48,6 +48,8 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-core:2.2")
     //for get cpf validation
     implementation("org.hibernate:hibernate-validator:7.0.1.Final")
+    //for consumes xml
+    implementation("io.micronaut.xml:micronaut-jackson-xml")
    // testImplementation("io.micronaut:micronaut-http-client")
 
 }

@@ -21,3 +21,4 @@ jpa.default.properties.hibernate.format-sql: true
 #    max-inbound-message-size: 1024
 
 itau.erp.url: ${ITAU_URL:`http://localhost:9091/api/v1`}
+bcb.url: ${BCB_URL:`http://localhost:8082/api/v1`}

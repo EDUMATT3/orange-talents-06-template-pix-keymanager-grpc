@@ -5,10 +5,7 @@ import br.com.edumatt3.KeyTypeMessage
 import br.com.edumatt3.PixKeyManagerGrpcServiceGrpc
 import br.com.edumatt3.PixKeyRequest
 import br.com.edumatt3.common.exceptions.PixKeyAlreadyExistsException
-import br.com.edumatt3.pix.integration.Bearer
-import br.com.edumatt3.pix.integration.CustomerAccountResponse
-import br.com.edumatt3.pix.integration.Institution
-import br.com.edumatt3.pix.integration.ItauErpClient
+import br.com.edumatt3.pix.integration.itauerp.ItauErpClient
 import br.com.edumatt3.pix.register.AccountType.CONTA_CORRENTE
 import br.com.edumatt3.utils.createItauCustomerAccountReponse
 import br.com.edumatt3.utils.createPixKey

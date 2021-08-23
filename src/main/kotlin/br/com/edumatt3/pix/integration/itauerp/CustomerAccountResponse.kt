@@ -1,4 +1,4 @@
-package br.com.edumatt3.pix.integration
+package br.com.edumatt3.pix.integration.itauerp
 
 import br.com.edumatt3.pix.register.CustomerAccount
 import com.fasterxml.jackson.annotation.JsonProperty

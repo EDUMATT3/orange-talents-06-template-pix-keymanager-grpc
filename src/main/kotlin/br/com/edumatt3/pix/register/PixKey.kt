@@ -14,7 +14,7 @@ class PixKey(
     @field:Enumerated(EnumType.STRING)
     val keyType: KeyType,
     @field:NotBlank
-    val key: String,
+    var key: String,
     @field:NotNull
     @field:Enumerated(EnumType.STRING)
     val accountType: AccountType,
@@ -22,6 +22,12 @@ class PixKey(
     val account: CustomerAccount
 ) {
     fun belongsToClient(clientId: String): Boolean = this.clientId == clientId
+
+    fun isRandomKey() = keyType == KeyType.RANDOM
+
+    fun updateRandomKey(randomKey : String) {
+        if (isRandomKey()) key = randomKey
+    }
 
     @Id
     @GeneratedValue

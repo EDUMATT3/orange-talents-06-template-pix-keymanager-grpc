@@ -15,4 +15,8 @@ class CustomerAccount(
     val customerName: String,
     @field:NotBlank
     val customerCpf: String
-)
+){
+    companion object {
+        public val ITAU_ISPB: String = "60701190"
+    }
+}
