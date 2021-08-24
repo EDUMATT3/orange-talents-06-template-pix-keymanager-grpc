@@ -21,4 +21,11 @@ interface CentralBankClient {
         consumes = [MediaType.APPLICATION_XML]
     )
     fun deletePixKey(@PathVariable key: String, @Body request: DeletePixKeyBcbRequest): HttpResponse<DeletePixKeyBcbResponse>
+
+    @Get(
+        value = "/pix/keys/{key}",
+        produces = [MediaType.APPLICATION_XML],
+        consumes = [MediaType.APPLICATION_XML]
+    )
+    fun getByKey(@PathVariable key: String): HttpResponse<PixKeyDetailsResponse>
 }

@@ -17,7 +17,7 @@ enum class KeyType {
             }
         }
     },
-    PHONENUMBER {
+    PHONE {
         override fun validate(key: String?): Boolean {
             return if (key.isNullOrBlank()) false
             else key.matches("^\\+[1-9][0-9]\\d{1,14}\$".toRegex())

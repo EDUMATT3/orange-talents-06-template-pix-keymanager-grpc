@@ -1,6 +1,5 @@
 package br.com.edumatt3.pix.integration.bcb
 
-import br.com.edumatt3.KeyTypeMessage
 import br.com.edumatt3.pix.register.AccountType
 import br.com.edumatt3.pix.register.CustomerAccount
 import br.com.edumatt3.pix.register.KeyType
@@ -9,22 +8,22 @@ import br.com.edumatt3.pix.register.PixKey
 data class CreatePixKeyRequest(
     val keyType: KeyType,
     val key: String,
-    val bankAccount: BankAccountRequest,
-    val owner: OwnerRequest,
+    val bankAccount: BankAccount,
+    val owner: Owner,
 ){
     companion object {
         fun from(pixKey: PixKey): CreatePixKeyRequest {
             return CreatePixKeyRequest(
                 keyType = pixKey.keyType,
                 key = pixKey.key,
-                bankAccount = BankAccountRequest(
+                bankAccount = BankAccount(
                     participant = CustomerAccount.ITAU_ISPB,
                     branch = pixKey.account.agency,
                     accountNumber = pixKey.account.accountNumber,
                     accountType = AccountTypeBcb.from(pixKey.accountType)
                 ),
-                owner = OwnerRequest(
-                    type = OwnerRequest.OwnerType.LEGAL_PERSON,
+                owner = Owner(
+                    type = Owner.OwnerType.LEGAL_PERSON,
                     name = pixKey.account.customerName,
                     taxIdNumber = pixKey.account.customerCpf
                 )
@@ -33,7 +32,7 @@ data class CreatePixKeyRequest(
     }
 }
 
-data class BankAccountRequest(
+data class BankAccount(
     val participant: String,
     val branch: String,
     val accountNumber: String,
@@ -51,7 +50,7 @@ enum class AccountTypeBcb {
     }
 }
 
-data class OwnerRequest(
+data class Owner(
     val type: OwnerType,
     val name: String,
     val taxIdNumber: String

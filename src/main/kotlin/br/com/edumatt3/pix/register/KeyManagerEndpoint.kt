@@ -1,8 +1,8 @@
 package br.com.edumatt3.pix.register
 
+import br.com.edumatt3.CreatePixKeyRequest
+import br.com.edumatt3.CreatePixKeyResponse
 import br.com.edumatt3.PixKeyManagerGrpcServiceGrpc
-import br.com.edumatt3.PixKeyRequest
-import br.com.edumatt3.PixKeyResponse
 import br.com.edumatt3.common.ExceptionHandlerAround
 import io.grpc.stub.StreamObserver
 import org.slf4j.LoggerFactory
@@ -14,7 +14,10 @@ class KeyManagerEndpoint(private val newPixKeyService: NewPixKeyService) : PixKe
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    override fun register(request: PixKeyRequest?, responseObserver: StreamObserver<PixKeyResponse>?) {
+    override fun register(
+        request: CreatePixKeyRequest?,
+        responseObserver: StreamObserver<CreatePixKeyResponse>?
+    ) {
 
         logger.info("nova requisição: {}", request)
 
@@ -22,7 +25,7 @@ class KeyManagerEndpoint(private val newPixKeyService: NewPixKeyService) : PixKe
         val pixKey = newPixKeyService.register(newPixKey)
 
         logger.info("Pix created with id: {}", pixKey)
-        val response = PixKeyResponse.newBuilder().setPixId(pixKey).build()
+        val response = CreatePixKeyResponse.newBuilder().setPixId(pixKey).build()
 
         responseObserver!!.onNext(response)
         responseObserver.onCompleted()
