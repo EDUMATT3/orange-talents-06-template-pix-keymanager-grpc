@@ -2,15 +2,15 @@ package br.com.edumatt3.pix.register
 
 import br.com.edumatt3.AccountTypeMessage
 import br.com.edumatt3.CreatePixKeyRequest
+import br.com.edumatt3.CreatePixKeyServiceGrpc
 import br.com.edumatt3.KeyTypeMessage
-import br.com.edumatt3.PixKeyManagerGrpcServiceGrpc
 import br.com.edumatt3.common.exceptions.PixKeyAlreadyExistsException
+import br.com.edumatt3.pix.AccountType.CONTA_CORRENTE
+import br.com.edumatt3.pix.PixKeyRepository
 import br.com.edumatt3.pix.integration.bcb.CentralBankClient
 import br.com.edumatt3.pix.integration.bcb.CreatePixKeyBcbRequest
 import br.com.edumatt3.pix.integration.bcb.CreatePixKeyResponse
 import br.com.edumatt3.pix.integration.itauerp.ItauErpClient
-import br.com.edumatt3.pix.AccountType.CONTA_CORRENTE
-import br.com.edumatt3.pix.PixKeyRepository
 import br.com.edumatt3.utils.createItauCustomerAccountReponse
 import br.com.edumatt3.utils.createPixKey
 import br.com.edumatt3.utils.violations
@@ -40,7 +40,7 @@ import javax.inject.Singleton
 @MicronautTest(transactional = false)
 internal class KeyManagerEndpointTest(
     private val pixKeyRepository: PixKeyRepository,
-    private val keyManagerClient: PixKeyManagerGrpcServiceGrpc.PixKeyManagerGrpcServiceBlockingStub,
+    private val keyManagerClient: CreatePixKeyServiceGrpc.CreatePixKeyServiceBlockingStub,
 ) {
 
     @Inject
@@ -56,15 +56,14 @@ internal class KeyManagerEndpointTest(
 
     val CLIENT_ID = UUID.randomUUID().toString()
     val validCpf = "50508675847"
-    val accountType = CONTA_CORRENTE
 
     @Test
     internal fun `should create a new pix key`() {
 
-        `when`(itauErpClient.findAccount(CLIENT_ID, accountType))
-            .thenReturn(HttpResponse.ok(createItauCustomerAccountReponse(CLIENT_ID, validCpf, accountType)))
+        `when`(itauErpClient.findAccount(CLIENT_ID, CONTA_CORRENTE))
+            .thenReturn(HttpResponse.ok(createItauCustomerAccountReponse(CLIENT_ID, validCpf)))
 
-        val pixKeyBcbRequest = CreatePixKeyBcbRequest.from(createPixKey(CLIENT_ID, validCpf, accountType))
+        val pixKeyBcbRequest = CreatePixKeyBcbRequest.from(createPixKey(CLIENT_ID, validCpf))
 
         `when`(centralBankClient.createPixKey(pixKeyBcbRequest))
             .thenReturn(HttpResponse.created(CreatePixKeyResponse(key = validCpf, createdAt = LocalDateTime.now())))
@@ -83,7 +82,7 @@ internal class KeyManagerEndpointTest(
     @Test
     internal fun `should not register when key already exists`() {
 
-        pixKeyRepository.save(createPixKey(CLIENT_ID, validCpf, accountType))
+        pixKeyRepository.save(createPixKey(CLIENT_ID, validCpf))
 
         val exception = assertThrows<StatusRuntimeException> {
             val pixKeyRequest = CreatePixKeyRequest.newBuilder().setClientId(CLIENT_ID)
@@ -163,10 +162,10 @@ internal class KeyManagerEndpointTest(
 
     @Test
     internal fun `should not register a key when cant register on central bank`() {
-        `when`(itauErpClient.findAccount(CLIENT_ID, accountType))
-            .thenReturn(HttpResponse.ok(createItauCustomerAccountReponse(CLIENT_ID, validCpf, accountType)))
+        `when`(itauErpClient.findAccount(CLIENT_ID, CONTA_CORRENTE))
+            .thenReturn(HttpResponse.ok(createItauCustomerAccountReponse(CLIENT_ID, validCpf)))
 
-        val pixKeyBcbRequest = CreatePixKeyBcbRequest.from(createPixKey(CLIENT_ID, validCpf, accountType))
+        val pixKeyBcbRequest = CreatePixKeyBcbRequest.from(createPixKey(CLIENT_ID, validCpf))
 
         `when`(centralBankClient.createPixKey(pixKeyBcbRequest))
             .thenReturn(HttpResponse.notFound())
@@ -200,8 +199,8 @@ internal class KeyManagerEndpointTest(
     @Factory
     class Clients {
         @Singleton
-        fun blockingStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): PixKeyManagerGrpcServiceGrpc.PixKeyManagerGrpcServiceBlockingStub? {
-            return PixKeyManagerGrpcServiceGrpc.newBlockingStub(channel)
+        fun blockingStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): CreatePixKeyServiceGrpc.CreatePixKeyServiceBlockingStub? {
+            return CreatePixKeyServiceGrpc.newBlockingStub(channel)
         }
     }
 }

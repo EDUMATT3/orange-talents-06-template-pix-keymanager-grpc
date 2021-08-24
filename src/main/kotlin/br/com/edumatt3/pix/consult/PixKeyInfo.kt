@@ -31,7 +31,7 @@ data class PixKeyInfo(
                 key = pixKey.key,
                 accountType = AccountTypeMessage.valueOf(pixKey.accountType.name),
                 account = pixKey.account,
-                createdAt = LocalDateTime.now()
+                createdAt = pixKey.createdAt!!
             )
         }
 
@@ -50,14 +50,14 @@ data class PixKeyInfo(
                     customerName = response.owner.name,
                     customerCpf = response.owner.taxIdNumber
                 ),
-                createdAt = LocalDateTime.now()
+                createdAt = response.createdAt
             )
         }
     }
 
     fun toConsultPixKeyResponse(): ConsultPixKeyResponse{
         return ConsultPixKeyResponse.newBuilder()
-            .setPixId(clientId?.toString() ?: "")
+            .setPixId(pixId?.toString() ?: "")
             .setClientId(clientId ?: "")
             .setPixKey(
                 ConsultPixKeyResponse.PixKey.newBuilder()

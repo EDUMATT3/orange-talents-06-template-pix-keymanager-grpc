@@ -34,9 +34,11 @@ class NewPixKeyService(
 
         LOGGER.info("registering pix key in central bank (BCB)")
         val bcbResponse = centralBankClient.createPixKey(CreatePixKeyBcbRequest.from(pixKey))
-        if (!bcbResponse.status.equals(HttpStatus.CREATED))
-            throw IllegalStateException("Error trying to create pix key in central bank (BCB)")
-        pixKey.updateRandomKey(bcbResponse.body()!!.key)
+
+        when(bcbResponse.status){
+           HttpStatus.OK -> pixKey.updateRandomKey(bcbResponse.body()!!.key, bcbResponse.body()!!.createdAt)
+            else -> throw IllegalStateException("Error trying to create pix key in central bank (BCB)")
+        }
 
         pixKeyRepository.save(pixKey)
 

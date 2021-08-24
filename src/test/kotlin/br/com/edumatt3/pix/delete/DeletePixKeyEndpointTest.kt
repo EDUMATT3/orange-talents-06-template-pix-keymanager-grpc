@@ -1,11 +1,11 @@
 package br.com.edumatt3.pix.delete
 
 import br.com.edumatt3.DeletePixKeyRequest
-import br.com.edumatt3.PixKeyDeleteServiceGrpc
-import br.com.edumatt3.pix.integration.bcb.CentralBankClient
-import br.com.edumatt3.pix.integration.bcb.DeletePixKeyBcbRequest
+import br.com.edumatt3.DeletePixKeyServiceGrpc
 import br.com.edumatt3.pix.AccountType
 import br.com.edumatt3.pix.PixKeyRepository
+import br.com.edumatt3.pix.integration.bcb.CentralBankClient
+import br.com.edumatt3.pix.integration.bcb.DeletePixKeyBcbRequest
 import br.com.edumatt3.utils.createPixKey
 import io.grpc.ManagedChannel
 import io.grpc.Status
@@ -32,7 +32,7 @@ import javax.inject.Singleton
 internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository) {
 
     @Inject
-    private lateinit var client: PixKeyDeleteServiceGrpc.PixKeyDeleteServiceBlockingStub
+    private lateinit var client: DeletePixKeyServiceGrpc.DeletePixKeyServiceBlockingStub
 
     @Inject
     private lateinit var centralBankClient: CentralBankClient
@@ -46,7 +46,7 @@ internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository
     internal fun `should delete a pix key`() {
         val clientId = UUID.randomUUID().toString()
         val pixKey =
-            repository.save(createPixKey(clientId, "50508675847", AccountType.CONTA_CORRENTE))
+            repository.save(createPixKey(clientId, "50508675847"))
 
         `when`(centralBankClient.deletePixKey(pixKey.key, DeletePixKeyBcbRequest(pixKey.key)))
             .thenReturn(HttpResponse.ok())
@@ -64,7 +64,7 @@ internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository
     internal fun `should not delete the key when it is not found`() {
         val clientId = UUID.randomUUID().toString()
         val pixKey =
-            repository.save(createPixKey(clientId, "50508675847", AccountType.CONTA_CORRENTE))
+            repository.save(createPixKey(clientId, "50508675847"))
 
         val request = DeletePixKeyRequest.newBuilder()
             .setPixId(UUID.randomUUID().toString())
@@ -86,7 +86,7 @@ internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository
     @Test
     internal fun `should not delete a key when not belong to the user`() {
         val pixKey =
-            repository.save(createPixKey(UUID.randomUUID().toString(), "50508675847", AccountType.CONTA_CORRENTE))
+            repository.save(createPixKey(UUID.randomUUID().toString(), "50508675847"))
 
         val request = DeletePixKeyRequest
             .newBuilder()
@@ -112,8 +112,7 @@ internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository
         val pixKey = repository.save(
             createPixKey(
                 clientId,
-                "50508675847",
-                AccountType.CONTA_CORRENTE
+                "50508675847"
             )
         )
 
@@ -140,8 +139,8 @@ internal class DeletePixKeyEndpointTest(private val repository: PixKeyRepository
     @Factory
     class Clients  {
         @Singleton
-        fun blockingStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): PixKeyDeleteServiceGrpc.PixKeyDeleteServiceBlockingStub? {
-            return PixKeyDeleteServiceGrpc.newBlockingStub(channel)
+        fun blockingStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): DeletePixKeyServiceGrpc.DeletePixKeyServiceBlockingStub? {
+            return DeletePixKeyServiceGrpc.newBlockingStub(channel)
         }
     }
     @MockBean(CentralBankClient::class)

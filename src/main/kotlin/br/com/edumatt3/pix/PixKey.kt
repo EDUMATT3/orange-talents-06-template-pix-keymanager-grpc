@@ -1,5 +1,9 @@
 package br.com.edumatt3.pix
 
+import jdk.jfr.Timespan
+import jdk.jfr.Timestamp
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -21,15 +25,19 @@ class PixKey(
     @field:Embedded
     val account: CustomerAccount
 ) {
-    fun belongsToClient(clientId: String): Boolean = this.clientId == clientId
-
-    fun isRandomKey() = keyType == KeyType.RANDOM
-
-    fun updateRandomKey(randomKey : String) {
-        if (isRandomKey()) key = randomKey
-    }
 
     @Id
     @GeneratedValue
     var id: UUID? = null
+
+    var createdAt: LocalDateTime? = null
+
+    fun belongsToClient(clientId: String): Boolean = this.clientId == clientId
+
+    private fun isRandomKey() = keyType == KeyType.RANDOM
+
+    fun updateRandomKey(randomKey : String, createdAt: LocalDateTime) {
+        this.createdAt = createdAt
+        if (isRandomKey()) key = randomKey
+    }
 }
