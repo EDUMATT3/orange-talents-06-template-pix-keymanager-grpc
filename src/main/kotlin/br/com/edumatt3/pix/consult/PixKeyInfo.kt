@@ -6,11 +6,9 @@ import br.com.edumatt3.KeyTypeMessage
 import br.com.edumatt3.pix.integration.bcb.AccountTypeBcb.CACC
 import br.com.edumatt3.pix.integration.bcb.AccountTypeBcb.SVGS
 import br.com.edumatt3.pix.integration.bcb.PixKeyDetailsResponse
-import br.com.edumatt3.pix.register.CustomerAccount
-import br.com.edumatt3.pix.register.KeyType
-import br.com.edumatt3.pix.register.PixKey
+import br.com.edumatt3.pix.CustomerAccount
+import br.com.edumatt3.pix.PixKey
 import com.google.protobuf.Timestamp
-import com.google.protobuf.TimestampProto
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*

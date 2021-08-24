@@ -7,7 +7,7 @@ import br.com.edumatt3.ConsultPixKeyResponse
 import br.com.edumatt3.PixKeyConsultServiceGrpc
 import br.com.edumatt3.common.ExceptionHandlerAround
 import br.com.edumatt3.pix.integration.bcb.CentralBankClient
-import br.com.edumatt3.pix.register.PixKeyRepository
+import br.com.edumatt3.pix.PixKeyRepository
 import io.grpc.stub.StreamObserver
 import javax.inject.Singleton
 
@@ -25,14 +25,5 @@ class ConsultPixKeyEndpoint(
 
         responseObserver?.onNext(pixKeyInfo.toConsultPixKeyResponse())
         responseObserver?.onCompleted()
-    }
-}
-
-private fun ConsultPixKeyRequest?.toFilter(): PixConsultFilter {
-
-    return when(this?.filterCase){
-        PIXID -> PixConsultFilter.PixId(pixId = this.pixId.pixId, clientId = this.pixId.clientId)
-        KEY -> PixConsultFilter.Key(this.key)
-        else -> PixConsultFilter.Unknown()
     }
 }

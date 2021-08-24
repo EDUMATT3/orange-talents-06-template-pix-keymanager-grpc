@@ -1,9 +1,9 @@
 package br.com.edumatt3.pix.integration.bcb
 
-import br.com.edumatt3.pix.register.AccountType
-import br.com.edumatt3.pix.register.CustomerAccount
-import br.com.edumatt3.pix.register.KeyType
-import br.com.edumatt3.pix.register.PixKey
+import br.com.edumatt3.pix.AccountType
+import br.com.edumatt3.pix.CustomerAccount
+import br.com.edumatt3.pix.KeyType
+import br.com.edumatt3.pix.PixKey
 
 data class CreatePixKeyBcbRequest(
     val keyType: KeyType,

@@ -1,7 +1,7 @@
 package br.com.edumatt3.pix.integration.bcb
 
-import br.com.edumatt3.pix.register.CustomerAccount
-import br.com.edumatt3.pix.register.KeyType
+import br.com.edumatt3.pix.CustomerAccount
+import br.com.edumatt3.pix.KeyType
 import java.time.LocalDateTime
 
 data class DeletePixKeyBcbRequest(

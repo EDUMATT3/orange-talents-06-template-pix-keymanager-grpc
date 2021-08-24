@@ -1,6 +1,7 @@
 package br.com.edumatt3.pix.register
 
 import br.com.edumatt3.common.exceptions.PixKeyAlreadyExistsException
+import br.com.edumatt3.pix.PixKeyRepository
 import br.com.edumatt3.pix.integration.bcb.CentralBankClient
 import br.com.edumatt3.pix.integration.bcb.CreatePixKeyBcbRequest
 import br.com.edumatt3.pix.integration.itauerp.ItauErpClient

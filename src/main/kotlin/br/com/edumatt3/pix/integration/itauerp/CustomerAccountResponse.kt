@@ -1,6 +1,6 @@
 package br.com.edumatt3.pix.integration.itauerp
 
-import br.com.edumatt3.pix.register.CustomerAccount
+import br.com.edumatt3.pix.CustomerAccount
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CustomerAccountResponse(

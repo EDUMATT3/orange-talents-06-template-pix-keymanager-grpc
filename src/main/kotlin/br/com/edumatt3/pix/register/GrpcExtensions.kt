@@ -4,6 +4,8 @@ package br.com.edumatt3.pix.register
 import br.com.edumatt3.AccountTypeMessage.UNSPECIFIED
 import br.com.edumatt3.CreatePixKeyRequest
 import br.com.edumatt3.KeyTypeMessage.UNKNOWN
+import br.com.edumatt3.pix.AccountType
+import br.com.edumatt3.pix.KeyType
 
 fun CreatePixKeyRequest.toModel(): NewPixKey = NewPixKey(
     clientId,

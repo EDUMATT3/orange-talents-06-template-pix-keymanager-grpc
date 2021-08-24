@@ -1,4 +1,4 @@
-package br.com.edumatt3.pix.register
+package br.com.edumatt3.pix
 
 import io.micronaut.data.annotation.Repository
 import io.micronaut.data.jpa.repository.JpaRepository

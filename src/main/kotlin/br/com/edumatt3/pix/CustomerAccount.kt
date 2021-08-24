@@ -1,4 +1,4 @@
-package br.com.edumatt3.pix.register
+package br.com.edumatt3.pix
 
 import javax.persistence.Embeddable
 import javax.validation.constraints.NotBlank

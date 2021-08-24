@@ -9,7 +9,8 @@ import br.com.edumatt3.pix.integration.bcb.CentralBankClient
 import br.com.edumatt3.pix.integration.bcb.CreatePixKeyBcbRequest
 import br.com.edumatt3.pix.integration.bcb.CreatePixKeyResponse
 import br.com.edumatt3.pix.integration.itauerp.ItauErpClient
-import br.com.edumatt3.pix.register.AccountType.CONTA_CORRENTE
+import br.com.edumatt3.pix.AccountType.CONTA_CORRENTE
+import br.com.edumatt3.pix.PixKeyRepository
 import br.com.edumatt3.utils.createItauCustomerAccountReponse
 import br.com.edumatt3.utils.createPixKey
 import br.com.edumatt3.utils.violations

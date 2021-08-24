@@ -4,8 +4,8 @@ import br.com.edumatt3.DeletePixKeyRequest
 import br.com.edumatt3.PixKeyDeleteServiceGrpc
 import br.com.edumatt3.pix.integration.bcb.CentralBankClient
 import br.com.edumatt3.pix.integration.bcb.DeletePixKeyBcbRequest
-import br.com.edumatt3.pix.register.AccountType
-import br.com.edumatt3.pix.register.PixKeyRepository
+import br.com.edumatt3.pix.AccountType
+import br.com.edumatt3.pix.PixKeyRepository
 import br.com.edumatt3.utils.createPixKey
 import io.grpc.ManagedChannel
 import io.grpc.Status

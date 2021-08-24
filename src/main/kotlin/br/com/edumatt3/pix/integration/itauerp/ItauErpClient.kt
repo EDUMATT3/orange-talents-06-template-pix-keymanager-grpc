@@ -1,6 +1,6 @@
 package br.com.edumatt3.pix.integration.itauerp
 
-import br.com.edumatt3.pix.register.AccountType
+import br.com.edumatt3.pix.AccountType
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.PathVariable

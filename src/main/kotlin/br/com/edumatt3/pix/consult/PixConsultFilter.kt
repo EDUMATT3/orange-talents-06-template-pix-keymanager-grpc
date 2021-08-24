@@ -2,9 +2,7 @@ package br.com.edumatt3.pix.consult
 
 import br.com.edumatt3.common.exceptions.PixKeyNotFoundException
 import br.com.edumatt3.pix.integration.bcb.CentralBankClient
-import br.com.edumatt3.pix.integration.bcb.PixKeyDetailsResponse
-import br.com.edumatt3.pix.register.PixKey
-import br.com.edumatt3.pix.register.PixKeyRepository
+import br.com.edumatt3.pix.PixKeyRepository
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.HttpStatus
 import java.util.*

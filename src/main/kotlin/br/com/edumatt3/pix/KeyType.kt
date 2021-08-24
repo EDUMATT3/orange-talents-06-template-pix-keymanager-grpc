@@ -1,4 +1,4 @@
-package br.com.edumatt3.pix.register
+package br.com.edumatt3.pix
 
 import io.micronaut.validation.validator.constraints.EmailValidator
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator

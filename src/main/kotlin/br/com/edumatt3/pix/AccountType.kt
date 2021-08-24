@@ -1,4 +1,4 @@
-package br.com.edumatt3.pix.register
+package br.com.edumatt3.pix
 
 enum class AccountType {
     CONTA_CORRENTE,

@@ -1,5 +1,9 @@
 package br.com.edumatt3.pix.register
 
+import br.com.edumatt3.pix.AccountType
+import br.com.edumatt3.pix.CustomerAccount
+import br.com.edumatt3.pix.KeyType
+import br.com.edumatt3.pix.PixKey
 import io.micronaut.core.annotation.Introspected
 import java.util.*
 import javax.validation.constraints.NotBlank

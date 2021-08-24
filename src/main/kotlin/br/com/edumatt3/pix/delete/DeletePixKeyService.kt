@@ -4,13 +4,12 @@ import br.com.edumatt3.common.exceptions.PermissionDeniedException
 import br.com.edumatt3.common.exceptions.PixKeyNotFoundException
 import br.com.edumatt3.pix.integration.bcb.CentralBankClient
 import br.com.edumatt3.pix.integration.bcb.DeletePixKeyBcbRequest
-import br.com.edumatt3.pix.register.CustomerAccount
-import br.com.edumatt3.pix.register.PixKeyRepository
+import br.com.edumatt3.pix.CustomerAccount
+import br.com.edumatt3.pix.PixKeyRepository
 import io.micronaut.http.HttpStatus
 import io.micronaut.validation.Validated
 import java.util.*
 import javax.inject.Singleton
-import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 
 @Singleton
