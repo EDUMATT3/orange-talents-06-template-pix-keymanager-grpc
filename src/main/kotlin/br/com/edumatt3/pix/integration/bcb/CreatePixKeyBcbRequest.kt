@@ -5,15 +5,15 @@ import br.com.edumatt3.pix.register.CustomerAccount
 import br.com.edumatt3.pix.register.KeyType
 import br.com.edumatt3.pix.register.PixKey
 
-data class CreatePixKeyRequest(
+data class CreatePixKeyBcbRequest(
     val keyType: KeyType,
     val key: String,
     val bankAccount: BankAccount,
     val owner: Owner,
 ){
     companion object {
-        fun from(pixKey: PixKey): CreatePixKeyRequest {
-            return CreatePixKeyRequest(
+        fun from(pixKey: PixKey): CreatePixKeyBcbRequest {
+            return CreatePixKeyBcbRequest(
                 keyType = pixKey.keyType,
                 key = pixKey.key,
                 bankAccount = BankAccount(

@@ -28,17 +28,17 @@ internal class KeyTypeTest{
     //PHONENUMBER
     @Test
     internal fun `should be true for a valid phonenumber`(){
-        assertTrue(KeyType.PHONENUMBER.validate("+5519999999999"))
+        assertTrue(KeyType.PHONE.validate("+5519999999999"))
     }
 
     @Test
     internal fun `should be false for a invalid phonenumber`(){
-        assertFalse(KeyType.PHONENUMBER.validate("+551999999999c"))
+        assertFalse(KeyType.PHONE.validate("+551999999999c"))
     }
 
     @Test
     internal fun `should be false when phonenumber is not informed`(){
-        with(KeyType.PHONENUMBER){
+        with(KeyType.PHONE){
             assertFalse(validate(null))
             assertFalse(validate(""))
         }

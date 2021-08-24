@@ -1,12 +1,12 @@
 package br.com.edumatt3.pix.register
 
 import br.com.edumatt3.AccountTypeMessage
+import br.com.edumatt3.CreatePixKeyRequest
 import br.com.edumatt3.KeyTypeMessage
 import br.com.edumatt3.PixKeyManagerGrpcServiceGrpc
-import br.com.edumatt3.PixKeyRequest
 import br.com.edumatt3.common.exceptions.PixKeyAlreadyExistsException
 import br.com.edumatt3.pix.integration.bcb.CentralBankClient
-import br.com.edumatt3.pix.integration.bcb.CreatePixKeyRequest
+import br.com.edumatt3.pix.integration.bcb.CreatePixKeyBcbRequest
 import br.com.edumatt3.pix.integration.bcb.CreatePixKeyResponse
 import br.com.edumatt3.pix.integration.itauerp.ItauErpClient
 import br.com.edumatt3.pix.register.AccountType.CONTA_CORRENTE
@@ -63,13 +63,13 @@ internal class KeyManagerEndpointTest(
         `when`(itauErpClient.findAccount(CLIENT_ID, accountType))
             .thenReturn(HttpResponse.ok(createItauCustomerAccountReponse(CLIENT_ID, validCpf, accountType)))
 
-        val pixKeyBcbRequest = CreatePixKeyRequest.from(createPixKey(CLIENT_ID, validCpf, accountType))
+        val pixKeyBcbRequest = CreatePixKeyBcbRequest.from(createPixKey(CLIENT_ID, validCpf, accountType))
 
         `when`(centralBankClient.createPixKey(pixKeyBcbRequest))
             .thenReturn(HttpResponse.created(CreatePixKeyResponse(key = validCpf, createdAt = LocalDateTime.now())))
 
 
-        val pixKeyRequest = PixKeyRequest.newBuilder().setClientId(CLIENT_ID)
+        val pixKeyRequest = CreatePixKeyRequest.newBuilder().setClientId(CLIENT_ID)
             .setKeyType(KeyTypeMessage.CPF)
             .setKey(validCpf)
             .setAccountType(AccountTypeMessage.CONTA_CORRENTE)
@@ -85,7 +85,7 @@ internal class KeyManagerEndpointTest(
         pixKeyRepository.save(createPixKey(CLIENT_ID, validCpf, accountType))
 
         val exception = assertThrows<StatusRuntimeException> {
-            val pixKeyRequest = PixKeyRequest.newBuilder().setClientId(CLIENT_ID)
+            val pixKeyRequest = CreatePixKeyRequest.newBuilder().setClientId(CLIENT_ID)
                 .setKeyType(KeyTypeMessage.CPF)
                 .setKey(validCpf)
                 .setAccountType(AccountTypeMessage.CONTA_CORRENTE)
@@ -108,7 +108,7 @@ internal class KeyManagerEndpointTest(
             .thenReturn(HttpResponse.notFound())
 
         val exception = assertThrows<StatusRuntimeException> {
-            val pixKeyRequest = PixKeyRequest.newBuilder().setClientId(CLIENT_ID)
+            val pixKeyRequest = CreatePixKeyRequest.newBuilder().setClientId(CLIENT_ID)
                 .setKeyType(KeyTypeMessage.CPF)
                 .setKey(validCpf)
                 .setAccountType(AccountTypeMessage.CONTA_CORRENTE)
@@ -127,7 +127,7 @@ internal class KeyManagerEndpointTest(
     internal fun `should not register when params are invalid`() {
 
         val thrown = assertThrows<StatusRuntimeException> {
-            keyManagerClient.register(PixKeyRequest.newBuilder().build())
+            keyManagerClient.register(CreatePixKeyRequest.newBuilder().build())
         }
 
         with(thrown) {
@@ -145,7 +145,7 @@ internal class KeyManagerEndpointTest(
     @Test
     internal fun `should not register when invalid key`() {
         val thrown = assertThrows<StatusRuntimeException> {
-            val pixKeyRequest = PixKeyRequest.newBuilder().setClientId(CLIENT_ID)
+            val pixKeyRequest = CreatePixKeyRequest.newBuilder().setClientId(CLIENT_ID)
                 .setKeyType(KeyTypeMessage.CPF)
                 .setKey("5050.invalid.8675847")
                 .setAccountType(AccountTypeMessage.CONTA_CORRENTE)
@@ -165,13 +165,13 @@ internal class KeyManagerEndpointTest(
         `when`(itauErpClient.findAccount(CLIENT_ID, accountType))
             .thenReturn(HttpResponse.ok(createItauCustomerAccountReponse(CLIENT_ID, validCpf, accountType)))
 
-        val pixKeyBcbRequest = CreatePixKeyRequest.from(createPixKey(CLIENT_ID, validCpf, accountType))
+        val pixKeyBcbRequest = CreatePixKeyBcbRequest.from(createPixKey(CLIENT_ID, validCpf, accountType))
 
         `when`(centralBankClient.createPixKey(pixKeyBcbRequest))
             .thenReturn(HttpResponse.notFound())
 
         val exception = assertThrows<StatusRuntimeException> {
-            val pixKeyRequest = PixKeyRequest.newBuilder().setClientId(CLIENT_ID)
+            val pixKeyRequest = CreatePixKeyRequest.newBuilder().setClientId(CLIENT_ID)
                 .setKeyType(KeyTypeMessage.CPF)
                 .setKey(validCpf)
                 .setAccountType(AccountTypeMessage.CONTA_CORRENTE)

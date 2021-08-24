@@ -13,7 +13,7 @@ interface CentralBankClient {
         produces = [MediaType.APPLICATION_XML],
         consumes = [MediaType.APPLICATION_XML]
     )
-    fun createPixKey(@Body request: CreatePixKeyRequest): HttpResponse<CreatePixKeyResponse>
+    fun createPixKey(@Body request: CreatePixKeyBcbRequest): HttpResponse<CreatePixKeyResponse>
 
     @Delete(
         value = "/pix/keys/{key}",

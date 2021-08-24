@@ -10,15 +10,15 @@ import "google/protobuf/timestamp.proto";
 
 package br.com.edumatt3.grpc;
 
-service PixKeyManagerGrpcService {
+service CreatePixKeyService {
   rpc register (CreatePixKeyRequest) returns (CreatePixKeyResponse) {}
 }
 
-service PixKeyDeleteService {
+service DeletePixKeyService {
   rpc delete(DeletePixKeyRequest) returns (google.protobuf.Empty) {}
 }
 
-service PixKeyConsultService {
+service ConsultPixKeyService {
   rpc consult(ConsultPixKeyRequest) returns (ConsultPixKeyResponse) {}
 }
 message CreatePixKeyRequest {

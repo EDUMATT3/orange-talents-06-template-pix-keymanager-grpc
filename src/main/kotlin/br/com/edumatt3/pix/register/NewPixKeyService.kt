@@ -2,7 +2,7 @@ package br.com.edumatt3.pix.register
 
 import br.com.edumatt3.common.exceptions.PixKeyAlreadyExistsException
 import br.com.edumatt3.pix.integration.bcb.CentralBankClient
-import br.com.edumatt3.pix.integration.bcb.CreatePixKeyRequest
+import br.com.edumatt3.pix.integration.bcb.CreatePixKeyBcbRequest
 import br.com.edumatt3.pix.integration.itauerp.ItauErpClient
 import io.micronaut.http.HttpStatus
 import io.micronaut.validation.Validated
@@ -32,7 +32,7 @@ class NewPixKeyService(
         val pixKey = newPixKey.toModel(account)
 
         LOGGER.info("registering pix key in central bank (BCB)")
-        val bcbResponse = centralBankClient.createPixKey(CreatePixKeyRequest.from(pixKey))
+        val bcbResponse = centralBankClient.createPixKey(CreatePixKeyBcbRequest.from(pixKey))
         if (!bcbResponse.status.equals(HttpStatus.CREATED))
             throw IllegalStateException("Error trying to create pix key in central bank (BCB)")
         pixKey.updateRandomKey(bcbResponse.body()!!.key)
